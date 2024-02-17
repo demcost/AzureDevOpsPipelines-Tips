@@ -12,7 +12,7 @@ variables:
   anyTfChanges: false
 
 steps:
-- task: TerraformInstaller@2
+- task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
 
