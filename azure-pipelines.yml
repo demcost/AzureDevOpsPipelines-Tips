@@ -9,6 +9,7 @@ variables:
   resourceGroup: aks-best-practices-rg3
   storageAccount: terraformtfstateskip
   container: tfstate
+  tfstateFile: terraform.tfstate
   anyTfChanges: false
 
 steps:
