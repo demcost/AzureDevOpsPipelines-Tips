@@ -10,15 +10,10 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "aks-best-practices-rg3" {
-  name     = "aks-best-practices-rg3"
-  location = "East US"
-}
-
-resource "azurerm_kubernetes_cluster" "aks-best-practices-rg3" {
+resource "azurerm_kubernetes_cluster" "example-aks1" {
   name                = "example-aks1"
-  location            = azurerm_resource_group.aks-best-practices-rg3.location
-  resource_group_name = azurerm_resource_group.aks-best-practices-rg3.name
+  location            = "East US"
+  resource_group_name = "aks-best-practices-rg3"
   dns_prefix          = "exampleaks1"
 
   default_node_pool {
