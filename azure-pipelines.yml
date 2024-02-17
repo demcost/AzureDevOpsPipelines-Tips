@@ -5,22 +5,18 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  subscription: Visual Studio Enterprise(17b12858-3960-4e6f-a663-a06fdae23428)
-  resourceGroup: resourcegroup-tfstate
+  subscription: (Demetrio) Azure Internal Subscription(e4c9bef2-aadd-4bc6-aab1-fd7fdae3f93c)
+  resourceGroup: aks-best-practices-rg3
   storageAccount: terraformtfstateskip
   container: tfstate
-  tfstateFile: terraform.tfstate
   anyTfChanges: false
 
 steps:
-
-- task: TerraformInstaller@0
-  displayName: install Terraform v0.12.28
+- task: TerraformInstaller@2
   inputs:
-    terraformVersion: '0.12.28'
+    terraformVersion: 'latest'
 
-- task: TerraformTaskV1@0
-  displayName: terraform init
+- task: TerraformTaskV4@4
   inputs:
     provider: 'azurerm'
     command: 'init'
@@ -30,17 +26,17 @@ steps:
     backendAzureRmStorageAccountName: '$(storageAccount)'
     backendAzureRmContainerName: '$(container)'
     backendAzureRmKey: '$(tfstateFile)'
+   
 
-- task: TerraformTaskV1@0
+- task: TerraformTaskV4@4
   displayName: terraform plan -out=tfplan
   inputs:
     provider: 'azurerm'
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)/skip-step'
     commandOptions: '-out=tfplan'
-    # commandOptions: '-detailed-exitcode -out=tfplan'
     environmentServiceNameAzureRM: '$(subscription)'
-
+    
 - task: PowerShell@2
   displayName: detect any terraform change
   inputs:
@@ -61,9 +57,8 @@ steps:
         Write-Host "There is no change detected in Terraform tfplan file"
       }
 
-- task: TerraformTaskV1@0
+- task: TerraformTaskV4@4
   displayName: terraform apply tfplan
-  condition: eq(variables.anyTfChanges, true)
   inputs:
     provider: 'azurerm'
     command: 'apply'
